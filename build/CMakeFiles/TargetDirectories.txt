@@ -1,0 +1,3 @@
+/Users/awakhouna/Desktop/Projet-INF443/Code/build/CMakeFiles/Code.dir
+/Users/awakhouna/Desktop/Projet-INF443/Code/build/CMakeFiles/edit_cache.dir
+/Users/awakhouna/Desktop/Projet-INF443/Code/build/CMakeFiles/rebuild_cache.dir
