@@ -1,6 +1,6 @@
-CMakeFiles/Code.dir/src/scene.cpp.o: \
-  /Users/awakhouna/Desktop/Projet-INF443/Code/src/scene.cpp \
-  /Users/awakhouna/Desktop/Projet-INF443/Code/src/scene.hpp \
+CMakeFiles/Code.dir/src/lac.cpp.o: \
+  /Users/awakhouna/Desktop/Projet-INF443/Code/src/lac.cpp \
+  /Users/awakhouna/Desktop/Projet-INF443/Code/src/lac.hpp \
   /Users/awakhouna/Desktop/Projet-INF443/Code/library/cgp/cgp.hpp \
   /Users/awakhouna/Desktop/Projet-INF443/Code/library/cgp/base/base.hpp \
   /Users/awakhouna/Desktop/Projet-INF443/Code/library/cgp/base/error/error.hpp \
@@ -578,6 +578,4 @@ CMakeFiles/Code.dir/src/scene.cpp.o: \
   /Users/awakhouna/Desktop/Projet-INF443/Code/library/cgp/helper_common_scene/helper_common_scene.hpp \
   /Users/awakhouna/Desktop/Projet-INF443/Code/library/cgp/helper_common_scene/helper/helper.hpp \
   /Users/awakhouna/Desktop/Projet-INF443/Code/library/cgp/helper_common_scene/scene_environment_basic/scene_environment_basic.hpp \
-  /Users/awakhouna/Desktop/Projet-INF443/Code/src/terrain.hpp \
-  /Users/awakhouna/Desktop/Projet-INF443/Code/src/tree.hpp \
-  /Users/awakhouna/Desktop/Projet-INF443/Code/src/lac.hpp
+  /Users/awakhouna/Desktop/Projet-INF443/Code/src/terrain.hpp

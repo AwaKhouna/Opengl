@@ -2,25 +2,28 @@
 #include "lac.hpp"
 #include <cmath>
 
-using namespace cgp;
 
-// Evaluate 3D position of the terrain for any (u,v) \in [0,1]
-float evaluate_terrain_height(float x, float y)
+// Evaluate 3D position of the lac for any (u,v) \in [0,1]
+float evaluate_lac_height(float x, float y)
 {
-    
-    float z = 0;
+    // if(x < 2500)
+    //     float z = 10.0; TO DO
+    float z = - 0.5f; // To modify later
+    // float ct=0.1;
+    // z = z+0.1*cos(6*y-ct/2)+0.07*noise_perlin({x,y,z+ct/10},3,0.5,6);
+                    
    
     return z;
 }
 
-mesh create_terrain_mesh(int N, float terrain_length)
+mesh create_lac_mesh(int N, float lac_length)
 {
 
-    mesh terrain; // temporary terrain storage (CPU only)
-    terrain.position.resize(N*N);
-    terrain.uv.resize(N*N);
+    mesh lac; // temporary lac storage (CPU only)
+    lac.position.resize(N*N);
+    lac.uv.resize(N*N);
 
-    // Fill terrain geometry
+    // Fill lac geometry
     for(int ku=0; ku<N; ++ku)
     {
         for(int kv=0; kv<N; ++kv)
@@ -29,28 +32,23 @@ mesh create_terrain_mesh(int N, float terrain_length)
             float u = ku/(N-1.0f);
             float v = kv/(N-1.0f);
 
-            // Compute the real coordinates (x,y) of the terrain 
-            float x = (u - 0.5f) * terrain_length;
-            float y = (v - 0.5f) * terrain_length;
+            // Compute the real coordinates (x,y) of the lac 
+            float x = (u - 0.5f) * lac_length;
+            float y = (v - 0.5f) * 5.0f;
 
             // Compute the surface height function at the given sampled coordinate
-            float z = evaluate_terrain_height(x,y);
-            float pi = std::atan(1)*4;
+            float z = evaluate_lac_height(x,y);
+            // float pi = std::atan(1)*4;
             
             
-                
-                    z = - 2.0f*cos(2*pi/6.0f);
-                    float ct=0.1;
-                     z = z+0.02*cos(6*y-ct/2)+0.07*noise_perlin({x,y,z+ct/10},3,0.5,6);
-                    
                
           
 
             // Store vertex coordinates
-            terrain.position[kv+N*ku] = {x,y,z};
+            lac.position[kv+N*ku] = {x,y,z};
             
-            vec2 uv = {u*20,v*20};
-            terrain.uv[kv+N*ku] = uv;
+            vec2 uv = {u*20,v};
+            lac.uv[kv+N*ku] = uv;
         }
     }
 
@@ -65,15 +63,55 @@ mesh create_terrain_mesh(int N, float terrain_length)
             uint3 triangle_1 = {idx, idx+1+N, idx+1};
             uint3 triangle_2 = {idx, idx+N, idx+1+N};
 
-            terrain.connectivity.push_back(triangle_1);
-            terrain.connectivity.push_back(triangle_2);
+            lac.connectivity.push_back(triangle_1);
+            lac.connectivity.push_back(triangle_2);
         }
     }
 
     // need to call this function to fill the other buffer with default values (normal, color, etc)
-	terrain.fill_empty_field(); 
+	lac.fill_empty_field(); 
 
-    return terrain;
+    return lac;
+}
+
+void update_lac(mesh& lac, mesh_drawable& lac_visual, perlin_noise_parameters & parameters)
+{
+	// Number of samples in each direction (assuming a square grid)
+	int const N = std::sqrt(lac.position.size());
+    parameters.persistency = 0.5f;
+	parameters.frequency_gain = 6.0f;
+	parameters.octave = 3;
+	// Recompute the new vertices
+	for (int ku = 0; ku < N; ++ku) {
+		for (int kv = 0; kv < N; ++kv) {
+			
+			// Compute local parametric coordinates (u,v) \in [0,1]
+            const float u = ku/(N-1.0f);
+            const float v = kv/(N-1.0f);
+
+			int const idx = ku*N+kv;
+
+			// Compute the Perlin noise
+			float const noise = noise_perlin({u, v}, parameters.octave, parameters.persistency, parameters.frequency_gain);
+
+			// use the noise as height value
+			lac.position[idx].z = parameters.lac_height*noise;
+            
+
+			// use also the noise as color value
+			lac.color[idx] = 0.3f*vec3(0,0.5f,0)+0.7f*noise*vec3(1,1,1);
+		}
+	}
+
+	// Update the normal of the mesh structure
+	lac.compute_normal();
+	
+	// Update step: Allows to update a mesh_drawable without creating a new one
+	lac_visual.update_position(lac.position);
+	lac_visual.update_normal(lac.normal);
+	lac_visual.update_color(lac.color);
+	
+    
 }
 
 

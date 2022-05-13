@@ -1231,10 +1231,24 @@ CMakeFiles/Code.dir/library/third_party/src/simplexnoise/simplexnoise1234.cpp.s:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Code.dir/library/third_party/src/simplexnoise/simplexnoise1234.cpp.s"
 	g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/awakhouna/Desktop/Projet-INF443/Code/library/third_party/src/simplexnoise/simplexnoise1234.cpp -o CMakeFiles/Code.dir/library/third_party/src/simplexnoise/simplexnoise1234.cpp.s
 
+CMakeFiles/Code.dir/src/lac.cpp.o: CMakeFiles/Code.dir/flags.make
+CMakeFiles/Code.dir/src/lac.cpp.o: ../src/lac.cpp
+CMakeFiles/Code.dir/src/lac.cpp.o: CMakeFiles/Code.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/awakhouna/Desktop/Projet-INF443/Code/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_84) "Building CXX object CMakeFiles/Code.dir/src/lac.cpp.o"
+	g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Code.dir/src/lac.cpp.o -MF CMakeFiles/Code.dir/src/lac.cpp.o.d -o CMakeFiles/Code.dir/src/lac.cpp.o -c /Users/awakhouna/Desktop/Projet-INF443/Code/src/lac.cpp
+
+CMakeFiles/Code.dir/src/lac.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Code.dir/src/lac.cpp.i"
+	g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/awakhouna/Desktop/Projet-INF443/Code/src/lac.cpp > CMakeFiles/Code.dir/src/lac.cpp.i
+
+CMakeFiles/Code.dir/src/lac.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Code.dir/src/lac.cpp.s"
+	g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/awakhouna/Desktop/Projet-INF443/Code/src/lac.cpp -o CMakeFiles/Code.dir/src/lac.cpp.s
+
 CMakeFiles/Code.dir/src/main.cpp.o: CMakeFiles/Code.dir/flags.make
 CMakeFiles/Code.dir/src/main.cpp.o: ../src/main.cpp
 CMakeFiles/Code.dir/src/main.cpp.o: CMakeFiles/Code.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/awakhouna/Desktop/Projet-INF443/Code/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_84) "Building CXX object CMakeFiles/Code.dir/src/main.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/awakhouna/Desktop/Projet-INF443/Code/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_85) "Building CXX object CMakeFiles/Code.dir/src/main.cpp.o"
 	g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Code.dir/src/main.cpp.o -MF CMakeFiles/Code.dir/src/main.cpp.o.d -o CMakeFiles/Code.dir/src/main.cpp.o -c /Users/awakhouna/Desktop/Projet-INF443/Code/src/main.cpp
 
 CMakeFiles/Code.dir/src/main.cpp.i: cmake_force
@@ -1248,7 +1262,7 @@ CMakeFiles/Code.dir/src/main.cpp.s: cmake_force
 CMakeFiles/Code.dir/src/scene.cpp.o: CMakeFiles/Code.dir/flags.make
 CMakeFiles/Code.dir/src/scene.cpp.o: ../src/scene.cpp
 CMakeFiles/Code.dir/src/scene.cpp.o: CMakeFiles/Code.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/awakhouna/Desktop/Projet-INF443/Code/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_85) "Building CXX object CMakeFiles/Code.dir/src/scene.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/awakhouna/Desktop/Projet-INF443/Code/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_86) "Building CXX object CMakeFiles/Code.dir/src/scene.cpp.o"
 	g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Code.dir/src/scene.cpp.o -MF CMakeFiles/Code.dir/src/scene.cpp.o.d -o CMakeFiles/Code.dir/src/scene.cpp.o -c /Users/awakhouna/Desktop/Projet-INF443/Code/src/scene.cpp
 
 CMakeFiles/Code.dir/src/scene.cpp.i: cmake_force
@@ -1262,7 +1276,7 @@ CMakeFiles/Code.dir/src/scene.cpp.s: cmake_force
 CMakeFiles/Code.dir/src/terrain.cpp.o: CMakeFiles/Code.dir/flags.make
 CMakeFiles/Code.dir/src/terrain.cpp.o: ../src/terrain.cpp
 CMakeFiles/Code.dir/src/terrain.cpp.o: CMakeFiles/Code.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/awakhouna/Desktop/Projet-INF443/Code/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_86) "Building CXX object CMakeFiles/Code.dir/src/terrain.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/awakhouna/Desktop/Projet-INF443/Code/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_87) "Building CXX object CMakeFiles/Code.dir/src/terrain.cpp.o"
 	g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Code.dir/src/terrain.cpp.o -MF CMakeFiles/Code.dir/src/terrain.cpp.o.d -o CMakeFiles/Code.dir/src/terrain.cpp.o -c /Users/awakhouna/Desktop/Projet-INF443/Code/src/terrain.cpp
 
 CMakeFiles/Code.dir/src/terrain.cpp.i: cmake_force
@@ -1276,7 +1290,7 @@ CMakeFiles/Code.dir/src/terrain.cpp.s: cmake_force
 CMakeFiles/Code.dir/src/tree.cpp.o: CMakeFiles/Code.dir/flags.make
 CMakeFiles/Code.dir/src/tree.cpp.o: ../src/tree.cpp
 CMakeFiles/Code.dir/src/tree.cpp.o: CMakeFiles/Code.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/awakhouna/Desktop/Projet-INF443/Code/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_87) "Building CXX object CMakeFiles/Code.dir/src/tree.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/awakhouna/Desktop/Projet-INF443/Code/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_88) "Building CXX object CMakeFiles/Code.dir/src/tree.cpp.o"
 	g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Code.dir/src/tree.cpp.o -MF CMakeFiles/Code.dir/src/tree.cpp.o.d -o CMakeFiles/Code.dir/src/tree.cpp.o -c /Users/awakhouna/Desktop/Projet-INF443/Code/src/tree.cpp
 
 CMakeFiles/Code.dir/src/tree.cpp.i: cmake_force
@@ -1372,6 +1386,7 @@ Code_OBJECTS = \
 "CMakeFiles/Code.dir/library/third_party/src/jpeg/jpge.cpp.o" \
 "CMakeFiles/Code.dir/library/third_party/src/lodepng/lodepng.cpp.o" \
 "CMakeFiles/Code.dir/library/third_party/src/simplexnoise/simplexnoise1234.cpp.o" \
+"CMakeFiles/Code.dir/src/lac.cpp.o" \
 "CMakeFiles/Code.dir/src/main.cpp.o" \
 "CMakeFiles/Code.dir/src/scene.cpp.o" \
 "CMakeFiles/Code.dir/src/terrain.cpp.o" \
@@ -1463,6 +1478,7 @@ Code: CMakeFiles/Code.dir/library/third_party/src/jpeg/jpgd.cpp.o
 Code: CMakeFiles/Code.dir/library/third_party/src/jpeg/jpge.cpp.o
 Code: CMakeFiles/Code.dir/library/third_party/src/lodepng/lodepng.cpp.o
 Code: CMakeFiles/Code.dir/library/third_party/src/simplexnoise/simplexnoise1234.cpp.o
+Code: CMakeFiles/Code.dir/src/lac.cpp.o
 Code: CMakeFiles/Code.dir/src/main.cpp.o
 Code: CMakeFiles/Code.dir/src/scene.cpp.o
 Code: CMakeFiles/Code.dir/src/terrain.cpp.o
@@ -1470,7 +1486,7 @@ Code: CMakeFiles/Code.dir/src/tree.cpp.o
 Code: CMakeFiles/Code.dir/build.make
 Code: /opt/homebrew/lib/libglfw.3.3.dylib
 Code: CMakeFiles/Code.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/awakhouna/Desktop/Projet-INF443/Code/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_88) "Linking CXX executable Code"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/awakhouna/Desktop/Projet-INF443/Code/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_89) "Linking CXX executable Code"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/Code.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
