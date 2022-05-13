@@ -25,7 +25,9 @@ struct scene_structure {
 	gui_parameters gui;                       // Standard GUI element storage
 	
 	cgp::mesh terrain_mesh;
+	cgp::mesh lac_mesh;
 	cgp::mesh_drawable terrain;
+	cgp::mesh_drawable lac;
 	cgp::mesh_drawable tree;
 	std::vector<cgp::vec3> tree_position;
 	perlin_noise_parameters parameters;

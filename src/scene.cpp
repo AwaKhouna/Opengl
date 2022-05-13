@@ -2,6 +2,7 @@
 
 #include "terrain.hpp"
 #include "tree.hpp"
+#include "lac.hpp"
 
 using namespace cgp;
 
@@ -21,6 +22,12 @@ void scene_structure::initialize()
 	terrain_mesh = create_terrain_mesh(N_terrain_samples, terrain_length);
 	terrain.initialize(terrain_mesh, "terrain");
 	update_terrain(terrain_mesh, terrain, parameters);
+
+
+	lac_mesh = create_lac_mesh(N_terrain_samples/10, terrain_length);
+	lac.initialize(lac_mesh, "lac");
+	update_lac(lac_mesh, lac, parameters);
+
 	mesh const tree_mesh = create_tree();
 	tree.initialize(tree_mesh, "tree");
 	terrain.shading.phong.specular = 0.0f; 
@@ -33,6 +40,12 @@ void scene_structure::initialize()
 		GL_REPEAT);
 	// Associate the texture_image_id to the image texture used when displaying visual
 	terrain.texture = texture_image_id;
+
+	GLuint const texture_eau = opengl_load_texture_image("assets/eau.jpg",
+		GL_REPEAT,
+		GL_REPEAT);
+	// Associate the texture_image_id to the image texture used when displaying visual
+	lac.texture = texture_eau;
 
 }
 
@@ -52,10 +65,16 @@ void scene_structure::display()
 	if (gui.display_frame)
 		draw(global_frame, environment);
 
+
+
+
+
+	draw(lac, environment);
 	draw(terrain, environment);
 	if (gui.display_wireframe){
 		draw_wireframe(tree, environment);
 		draw_wireframe(terrain, environment);
+		draw_wireframe(lac, environment);
 	}
 
 }
