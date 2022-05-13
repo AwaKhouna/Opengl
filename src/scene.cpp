@@ -24,8 +24,10 @@ void scene_structure::initialize()
 	mesh const tree_mesh = create_tree();
 	tree.initialize(tree_mesh, "tree");
 	terrain.shading.color = { 0.6f,0.85f,0.5f };
-	terrain.shading.phong.specular = 0.0f; // non-specular terrain material
+	terrain.shading.phong.specular = 0.0f; 
 	tree_position = generate_positions_on_terrain( 30, 30);
+
+
 }
 
 

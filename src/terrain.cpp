@@ -1,17 +1,17 @@
 
 #include "terrain.hpp"
-
+#include <cmath>
 
 using namespace cgp;
 
 // Evaluate 3D position of the terrain for any (u,v) \in [0,1]
 float evaluate_terrain_height(float x, float y)
 {
-    vec2 p_i[6] = { {-30,-30}, {15,15}, {-3,4} };
-    float h_i[6] = {5.0f, 8.0f, -4.0f};
-    float sigma_i[6] = {10.0f, 6.0f, 9.0f};
+    vec2 p_i[6] = { {15,15} };
+    float h_i[6] = { 8.0f};
+    float sigma_i[6] = { 6.0f};
     float z = 0;
-    for(int i = 0; i < 6; i++){
+    for(int i = 0; i < 1; i++){
         float d = norm(vec2(x, y) - p_i[i]) / sigma_i[i];
         z += h_i[i] * std::exp(-d * d);
     }
@@ -39,6 +39,11 @@ mesh create_terrain_mesh(int N, float terrain_length)
 
             // Compute the surface height function at the given sampled coordinate
             float z = evaluate_terrain_height(x,y);
+            float pi = std::atan(1)*4;
+            for i(o,)
+            if(-3.0f <= y && y <= 3.0f){
+                z = - 2.0f*cos(y*pi/6.0f);
+            }
 
             // Store vertex coordinates
             terrain.position[kv+N*ku] = {x,y,z};
@@ -105,9 +110,15 @@ void update_terrain(mesh& terrain, mesh_drawable& terrain_visual, perlin_noise_p
 
 std::vector<cgp::vec3> generate_positions_on_terrain(int N, float terrain_length){
     std::vector<cgp::vec3> pos;
-    for(int i = 0; i < N; i++){
+    for(int i = 0; i < N/2; i++){
         float x =  rand_interval(-terrain_length/4,terrain_length);
-        float y =  rand_interval(-terrain_length,terrain_length);
+        float y =  rand_interval(-terrain_length, -3.0f);
+        float z = evaluate_terrain_height(x,y);
+        pos.push_back(vec3({x,y,z}));
+    }
+    for(int i = 0; i < N/2; i++){
+        float x =  rand_interval(-terrain_length/4,terrain_length);
+        float y =  rand_interval( 3.0f ,terrain_length);
         float z = evaluate_terrain_height(x,y);
         pos.push_back(vec3({x,y,z}));
     }
