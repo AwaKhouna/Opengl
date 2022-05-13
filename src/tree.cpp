@@ -5,7 +5,7 @@ using namespace cgp;
 
 mesh create_cylinder_mesh(float radius, float height)
 {
-    mesh m; 
+    mesh cylinder; 
 
     // Number of samples
     int N = 20;
@@ -15,8 +15,8 @@ mesh create_cylinder_mesh(float radius, float height)
     {
         float u = k/float(N);
         vec3 p = {radius*std::cos(2*3.14f*u), radius*std::sin(2*3.14f*u), 0.0f};
-        m.position.push_back( p );
-        m.position.push_back( p+vec3(0,0,height) );
+        cylinder.position.push_back( p );
+        cylinder.position.push_back( p+vec3(0,0,height) );
     }
 
     // Connectivity
@@ -29,13 +29,13 @@ mesh create_cylinder_mesh(float radius, float height)
 
         uint3 t1 = {u00, u10, u11};
         uint3 t2 = {u00, u11, u01};
-        m.connectivity.push_back(t1);
-        m.connectivity.push_back(t2);
+        cylinder.connectivity.push_back(t1);
+        cylinder.connectivity.push_back(t2);
     }
 
-    m.fill_empty_field();
+    cylinder.fill_empty_field();
 
-    return m;
+    return cylinder;
 }
 
 mesh create_cone_mesh(float radius, float height, float z_offset)
@@ -86,6 +86,7 @@ mesh create_cone_mesh(float radius, float height, float z_offset)
 
 mesh create_tree()
 {
+
     float h = 0.7f; // trunk height
     float r = 0.1f; // trunk radius
 
