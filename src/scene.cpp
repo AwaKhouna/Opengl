@@ -23,7 +23,6 @@ void scene_structure::initialize()
 	terrain.initialize(terrain_mesh, "terrain");
 	update_terrain(terrain_mesh, terrain, parameters);
 
-
 	lac_mesh = create_lac_mesh(N_terrain_samples/10, terrain_length);
 	lac.initialize(lac_mesh, "lac");
 	update_lac(lac_mesh, lac, parameters);

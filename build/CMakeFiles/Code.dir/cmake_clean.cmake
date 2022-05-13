@@ -165,6 +165,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/Code.dir/library/third_party/src/lodepng/lodepng.cpp.o.d"
   "CMakeFiles/Code.dir/library/third_party/src/simplexnoise/simplexnoise1234.cpp.o"
   "CMakeFiles/Code.dir/library/third_party/src/simplexnoise/simplexnoise1234.cpp.o.d"
+  "CMakeFiles/Code.dir/src/lac.cpp.o"
+  "CMakeFiles/Code.dir/src/lac.cpp.o.d"
   "CMakeFiles/Code.dir/src/main.cpp.o"
   "CMakeFiles/Code.dir/src/main.cpp.o.d"
   "CMakeFiles/Code.dir/src/scene.cpp.o"

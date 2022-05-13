@@ -111,6 +111,7 @@ void update_lac(mesh& lac, mesh_drawable& lac_visual, perlin_noise_parameters & 
 	lac_visual.update_normal(lac.normal);
 	lac_visual.update_color(lac.color);
 	
+    
 }
 
 
