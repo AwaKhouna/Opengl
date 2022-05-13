@@ -23,10 +23,16 @@ void scene_structure::initialize()
 	update_terrain(terrain_mesh, terrain, parameters);
 	mesh const tree_mesh = create_tree();
 	tree.initialize(tree_mesh, "tree");
-	terrain.shading.color = { 0.6f,0.85f,0.5f };
 	terrain.shading.phong.specular = 0.0f; 
 	tree_position = generate_positions_on_terrain( 30, 30);
-
+	
+	// Load an image from a file, and send the result to the GPU
+	// return its identifier texture_image_id
+	GLuint const texture_image_id = opengl_load_texture_image("assets/texture_grass.jpg",
+		GL_REPEAT,
+		GL_REPEAT);
+	// Associate the texture_image_id to the image texture used when displaying visual
+	terrain.texture = texture_image_id;
 
 }
 
@@ -48,8 +54,8 @@ void scene_structure::display()
 
 	draw(terrain, environment);
 	if (gui.display_wireframe){
-		draw_wireframe(terrain, environment);
 		draw_wireframe(tree, environment);
+		draw_wireframe(terrain, environment);
 	}
 
 }

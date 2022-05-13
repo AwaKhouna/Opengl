@@ -23,6 +23,7 @@ mesh create_terrain_mesh(int N, float terrain_length)
 
     mesh terrain; // temporary terrain storage (CPU only)
     terrain.position.resize(N*N);
+    terrain.uv.resize(N*N);
 
     // Fill terrain geometry
     for(int ku=0; ku<N; ++ku)
@@ -43,10 +44,16 @@ mesh create_terrain_mesh(int N, float terrain_length)
             
             if(-3.0f <= y && y <= 3.0f ){
                 z = - 2.0f*cos(y*pi/6.0f);
+                if(-2.0f <= y && y <= 2.0f ){
+                    z = - 2.0f*cos(2*pi/6.0f);
+                }
             }
 
             // Store vertex coordinates
             terrain.position[kv+N*ku] = {x,y,z};
+            
+            vec2 uv = {u*20,v*20};
+            terrain.uv[kv+N*ku] = uv;
         }
     }
 
@@ -92,6 +99,9 @@ void update_terrain(mesh& terrain, mesh_drawable& terrain_visual, perlin_noise_p
 
 			// use the noise as height value
 			terrain.position[idx].z = parameters.terrain_height*noise;
+            if(ku >= 2*N/3 ){
+                terrain.position[idx].z = ( (float) 3.0f*(N/3 - (ku - 2*N/3))/N )*terrain.position[idx-N-1].z;
+            }
 
 			// use also the noise as color value
 			terrain.color[idx] = 0.3f*vec3(0,0.5f,0)+0.7f*noise*vec3(1,1,1);
