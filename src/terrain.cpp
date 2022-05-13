@@ -40,8 +40,8 @@ mesh create_terrain_mesh(int N, float terrain_length)
             // Compute the surface height function at the given sampled coordinate
             float z = evaluate_terrain_height(x,y);
             float pi = std::atan(1)*4;
-            for i(o,)
-            if(-3.0f <= y && y <= 3.0f){
+            
+            if(-3.0f <= y && y <= 3.0f ){
                 z = - 2.0f*cos(y*pi/6.0f);
             }
 
