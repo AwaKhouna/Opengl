@@ -11,7 +11,7 @@ struct perlin_noise_parameters
 	float frequency_gain = 2.0f;
 	int octave = 6;
 	float terrain_height = 10.0f;
-	float lac_height = -0.5f;
+	float lac_height = -1.0f;
 };
 
 float evaluate_terrain_height(float x, float y);

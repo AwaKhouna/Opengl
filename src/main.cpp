@@ -1,5 +1,3 @@
-
-#include "mesh_drawable_multitexture.hpp"
 #include "cgp/cgp.hpp" // Give access to the complete CGP library
 #include <iostream>  
 

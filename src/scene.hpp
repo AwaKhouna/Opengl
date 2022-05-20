@@ -2,6 +2,7 @@
 
 #include "cgp/cgp.hpp"
 #include "terrain.hpp"
+#include "deformation/deformation.hpp"
 
 // The element of the GUI that are not already stored in other structures
 struct gui_parameters {
@@ -22,13 +23,19 @@ struct scene_structure {
 	cgp::scene_environment_basic_camera_spherical_coords environment; // Standard environment controler
 	cgp::inputs_interaction_parameters inputs; // Storage for inputs status (mouse, keyboard, window dimension)
 
+	scene_environment_with_shader_deformation environment1;
+	cgp::timer_basic timer;
 	gui_parameters gui;                       // Standard GUI element storage
 	
+	cgp::mesh rectangle_mesh;
 	cgp::mesh terrain_mesh;
 	cgp::mesh lac_mesh;
+	cgp::mesh_drawable rectangle;
 	cgp::mesh_drawable terrain;
 	cgp::mesh_drawable lac;
-	cgp::mesh_drawable tree;
+	cgp::mesh_drawable trunk;
+	cgp::mesh_drawable branches;
+	cgp::mesh_drawable foliage;
 	std::vector<cgp::vec3> tree_position;
 	perlin_noise_parameters parameters;
 
