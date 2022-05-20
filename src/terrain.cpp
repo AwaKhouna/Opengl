@@ -41,11 +41,12 @@ mesh create_terrain_mesh(int N, float terrain_length)
             // Compute the surface height function at the given sampled coordinate
             float z = evaluate_terrain_height(x,y);
             float pi = std::atan(1)*4;
+            float y0 = sin(2*pi*u);//*noise_perlin({u,u}, 1, 0.9f, 5.0f) ;
             
-            if(-3.0f <= y && y <= 3.0f ){
-                z = - 2.0f*cos(y*pi/6.0f);
-                if(-2.0f <= y && y <= 2.0f ){
-                    z = - 2.0f*cos(2*pi/6.0f);
+            if(-3.0f + 3.0f*y0 <= y && y <= 3.0f + 3.0f*y0 ){
+                z = -4.0f*cos((y - 3.0*y0)*pi/6.0f);
+                if(-2.0f + 2.0f*y0 <= y && y <= 2.0f + 2.0f*y0 ){
+                    z = - 6.0f*cos(2*pi/6.0f);
                 }
             }
 
@@ -87,6 +88,7 @@ void update_terrain(mesh& terrain, mesh_drawable& terrain_visual, perlin_noise_p
 	// Recompute the new vertices
 	for (int ku = 0; ku < N; ++ku) {
 		for (int kv = 0; kv < N; ++kv) {
+
 			
 			// Compute local parametric coordinates (u,v) \in [0,1]
             const float u = ku/(N-1.0f);
@@ -94,17 +96,12 @@ void update_terrain(mesh& terrain, mesh_drawable& terrain_visual, perlin_noise_p
 
 			int const idx = ku*N+kv;
 
-			// Compute the Perlin noise
-			float const noise = noise_perlin({u, v}, parameters.octave, parameters.persistency, parameters.frequency_gain);
+			// // Compute the Perlin noise
+			terrain.position[idx].z += 10.0f; //( (float) 3.0f*(N/3 - (ku - 2*N/3))/N )*terrain.position[idx-N-1].z;
+            // }
 
-			// use the noise as height value
-			terrain.position[idx].z = parameters.terrain_height*noise;
-            if(ku >= 2*N/3 ){
-                terrain.position[idx].z = ( (float) 3.0f*(N/3 - (ku - 2*N/3))/N )*terrain.position[idx-N-1].z;
-            }
-
-			// use also the noise as color value
-			terrain.color[idx] = 0.3f*vec3(0,0.5f,0)+0.7f*noise*vec3(1,1,1);
+			// // use also the noise as color value
+			// terrain.color[idx] = 0.3f*vec3(0,0.5f,0)+0.7f*noise*vec3(1,1,1);
 		}
 	}
 
@@ -121,14 +118,14 @@ void update_terrain(mesh& terrain, mesh_drawable& terrain_visual, perlin_noise_p
 std::vector<cgp::vec3> generate_positions_on_terrain(int N, float terrain_length){
     std::vector<cgp::vec3> pos;
     for(int i = 0; i < N/2; i++){
-        float x =  rand_interval(-terrain_length/4,terrain_length);
-        float y =  rand_interval(-terrain_length, -3.0f);
+        float x =  rand_interval(-terrain_length,terrain_length);
+        float y =  rand_interval(-terrain_length, -5.0f);
         float z = evaluate_terrain_height(x,y);
         pos.push_back(vec3({x,y,z}));
     }
     for(int i = 0; i < N/2; i++){
-        float x =  rand_interval(-terrain_length/4,terrain_length);
-        float y =  rand_interval( 3.0f ,terrain_length);
+        float x =  rand_interval(-terrain_length,terrain_length);
+        float y =  rand_interval( 2.0f ,terrain_length);
         float z = evaluate_terrain_height(x,y);
         pos.push_back(vec3({x,y,z}));
     }

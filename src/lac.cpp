@@ -3,18 +3,7 @@
 #include <cmath>
 
 
-// Evaluate 3D position of the lac for any (u,v) \in [0,1]
-float evaluate_lac_height(float x, float y)
-{
-    // if(x < 2500)
-    //     float z = 10.0; TO DO
-    float z = - 0.5f; // To modify later
-    // float ct=0.1;
-    // z = z+0.1*cos(6*y-ct/2)+0.07*noise_perlin({x,y,z+ct/10},3,0.5,6);
-                    
-   
-    return z;
-}
+
 
 mesh create_lac_mesh(int N, float lac_length)
 {
@@ -33,17 +22,14 @@ mesh create_lac_mesh(int N, float lac_length)
             float v = kv/(N-1.0f);
 
             // Compute the real coordinates (x,y) of the lac 
+            float pi = std::atan(1)*4;
             float x = (u - 0.5f) * lac_length;
-            float y = (v - 0.5f) * 5.0f;
+            float y = (v - 0.5f) * 8.0f + 2.5f * sin(2*pi*u)*noise_perlin({u,u}, 1, 0.9f, 5.0f); 
 
             // Compute the surface height function at the given sampled coordinate
-            float z = evaluate_lac_height(x,y);
-            // float pi = std::atan(1)*4;
-            
-            
-               
-          
-
+            float z = -0.5f; // voir terrain.php pour modifier lac_height
+            if( x < -lac_length/4 - 0.5f)
+                z += 10.0f;
             // Store vertex coordinates
             lac.position[kv+N*ku] = {x,y,z};
             
@@ -70,6 +56,7 @@ mesh create_lac_mesh(int N, float lac_length)
 
     // need to call this function to fill the other buffer with default values (normal, color, etc)
 	lac.fill_empty_field(); 
+    
 
     return lac;
 }
@@ -78,8 +65,8 @@ void update_lac(mesh& lac, mesh_drawable& lac_visual, perlin_noise_parameters & 
 {
 	// Number of samples in each direction (assuming a square grid)
 	int const N = std::sqrt(lac.position.size());
-    parameters.persistency = 0.5f;
-	parameters.frequency_gain = 6.0f;
+    parameters.persistency = rand_interval(0.0f,1.0f);
+	parameters.frequency_gain = rand_interval(1.0,10.0);
 	parameters.octave = 3;
 	// Recompute the new vertices
 	for (int ku = 0; ku < N; ++ku) {
@@ -95,8 +82,7 @@ void update_lac(mesh& lac, mesh_drawable& lac_visual, perlin_noise_parameters & 
 			float const noise = noise_perlin({u, v}, parameters.octave, parameters.persistency, parameters.frequency_gain);
 
 			// use the noise as height value
-			lac.position[idx].z = parameters.lac_height*noise;
-            
+			lac.position[idx].z += 0;//noise;
 
 			// use also the noise as color value
 			lac.color[idx] = 0.3f*vec3(0,0.5f,0)+0.7f*noise*vec3(1,1,1);
@@ -105,7 +91,7 @@ void update_lac(mesh& lac, mesh_drawable& lac_visual, perlin_noise_parameters & 
 
 	// Update the normal of the mesh structure
 	lac.compute_normal();
-	
+
 	// Update step: Allows to update a mesh_drawable without creating a new one
 	lac_visual.update_position(lac.position);
 	lac_visual.update_normal(lac.normal);
