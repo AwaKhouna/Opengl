@@ -21,7 +21,9 @@ float evaluate_terrain_height(float x, float y);
 	The z coordinates of the vertices are computed using evaluate_terrain_height(x,y).
 	The vertices are sampled along a regular grid structure in (x,y) directions. 
 	The total number of vertices is N*N (N along each direction x/y) 	*/
-cgp::mesh create_terrain_mesh(int N, float length);
+cgp::mesh create_terrain_mesh(int N, float length, perlin_noise_parameters & parameters);
 std::vector<cgp::vec3> generate_positions_on_terrain(int N, float terrain_length);
-void update_terrain(mesh& terrain, mesh_drawable& terrain_visual, perlin_noise_parameters const& parameters);
+void update_terrain(mesh& terrain, mesh_drawable& terrain_visual);
+double norm(vec2 a);
+bool separated(vec2 a, std::vector<cgp::vec3> pos);
 
