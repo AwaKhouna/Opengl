@@ -17,16 +17,16 @@ void scene_structure::initialize()
 	environment.camera.axis = camera_spherical_coordinates_axis::z;
 	environment.camera.look_at({ 15.0f,6.0f,6.0f }, { 0,0,0 });
 
-	int N_terrain_samples = 500;
+	int N_terrain_samples = 1000;
 	float terrain_length = 60;
 	terrain_mesh = create_terrain_mesh(N_terrain_samples, terrain_length, parameters);
 	terrain.initialize(terrain_mesh, "terrain");
 	update_terrain(terrain_mesh, terrain);
 
-	lac_mesh = create_lac_mesh(N_terrain_samples/10, terrain_length);
+	lac_mesh = create_lac_mesh(N_terrain_samples/5, terrain_length);
 	lac.initialize(lac_mesh, "lac");
 	update_lac(lac_mesh, lac, parameters);
-	// lac.shader = opengl_load_shader("shaders/deformation/vert.glsl", "shaders/deformation/frag.glsl");                 
+	// lac.shader = opengl_load_shader("shaders/transparency/vert.glsl","shaders/transparency/frag.glsl");              
 
 	rectangle_mesh1 = cgp::mesh_primitive_quadrangle({-terrain_length/4 + 0.1f,-terrain_length/2,0},{-terrain_length/4,-terrain_length/2,10.0f},{-terrain_length/4,0,10.0f},{-terrain_length/4 + 0.1f,0,0});
 	rectangle_mesh2 = cgp::mesh_primitive_quadrangle({-terrain_length/4 + 0.1f,6.0f,0},{-terrain_length/4,6.0f,10.0f},{-terrain_length/4,terrain_length/2,10.0f},{-terrain_length/4 + 0.1f,terrain_length/2,0});

@@ -36,24 +36,36 @@ mesh create_lac_mesh(int N, float lac_length)
             
             vec2 uv = {u*10,v};
             lac.uv[kv+N*ku] = uv;
+
+            // Connectivity
+
+            if(ku < N-1  && kv < N - 1){
+                unsigned int idx = kv + N*ku;
+                uint3 triangle_1 = {idx, idx+1+N, idx+1};
+                uint3 triangle_2 = {idx, idx+N, idx+1+N};
+
+                lac.connectivity.push_back(triangle_1);
+                lac.connectivity.push_back(triangle_2);
+
+            }
         }
     }
 
     // Generate triangle organization
     //  Parametric surface with uniform grid sampling: generate 2 triangles for each grid cell
-    for(int ku=0; ku<N-1; ++ku)
-    {
-        for(int kv=0; kv<N-1; ++kv)
-        {
-            unsigned int idx = kv + N*ku; // current vertex offset
+    // for(int ku=0; ku<N-1; ++ku)
+    // {
+    //     for(int kv=0; kv<N-1; ++kv)
+    //     {
+    //         unsigned int idx = kv + N*ku; // current vertex offset
 
-            uint3 triangle_1 = {idx, idx+1+N, idx+1};
-            uint3 triangle_2 = {idx, idx+N, idx+1+N};
+    //         uint3 triangle_1 = {idx, idx+1+N, idx+1};
+    //         uint3 triangle_2 = {idx, idx+N, idx+1+N};
 
-            lac.connectivity.push_back(triangle_1);
-            lac.connectivity.push_back(triangle_2);
-        }
-    }
+    //         lac.connectivity.push_back(triangle_1);
+    //         lac.connectivity.push_back(triangle_2);
+    //     }
+    // }
 
     // need to call this function to fill the other buffer with default values (normal, color, etc)
 	lac.fill_empty_field(); 
@@ -131,23 +143,23 @@ void update_lac_time(mesh& lac, mesh_drawable& lac_visual,float t)
 		}
         
 	}
-    for(int ku=0; ku<N-1; ++ku)
-    {
-        for(int kv=0; kv<N-1; ++kv)
-        {
-            unsigned int idx = kv + N*ku; // current vertex offset
+    // for(int ku=0; ku<N-1; ++ku)
+    // {
+    //     for(int kv=0; kv<N-1; ++kv)
+    //     {
+    //         unsigned int idx = kv + N*ku; // current vertex offset
 
-            uint3 triangle_1 = {idx, idx+1+N, idx+1};
-            uint3 triangle_2 = {idx, idx+N, idx+1+N};
+    //         uint3 triangle_1 = {idx, idx+1+N, idx+1};
+    //         uint3 triangle_2 = {idx, idx+N, idx+1+N};
 
-            lac.connectivity.push_back(triangle_1);
-            lac.connectivity.push_back(triangle_2);
-        }
-    }
+    //         lac.connectivity.push_back(triangle_1);
+    //         lac.connectivity.push_back(triangle_2);
+    //     }
+    // }
 
     // need to call this function to fill the other buffer with default values (normal, color, etc)
 	
-   lac.fill_empty_field();
+   // lac.fill_empty_field();
 
 
 // Update the normal of the mesh structure
@@ -169,7 +181,7 @@ void dynamic_update(mesh& mesh_shape, mesh_drawable& drawable, float t)
 	for (int k = 0; k < N; ++k) {
 		// Changing the positions
 		vec3& p = mesh_shape.position[k];
-		p.z += 0.001f*std::cos( 8 * 3.14f*p.x - t);
+		p.z += 0.003f*std::cos( 6 * 3.14f*p.x - t);
 
 		// The colors can be changed too
 		// vec3& c = mesh_shape.color[k]; 
