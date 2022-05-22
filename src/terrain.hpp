@@ -14,6 +14,7 @@ struct perlin_noise_parameters
 	float lac_height = -1.0f;
 };
 
+
 float evaluate_terrain_height(float x, float y);
 
 /** Compute a terrain mesh 
