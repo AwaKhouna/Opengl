@@ -2,6 +2,7 @@
 
 #include "cgp/cgp.hpp"
 #include "terrain.hpp"
+#include "key_positions_structure.hpp"
 
 // The element of the GUI that are not already stored in other structures
 struct gui_parameters {
@@ -22,9 +23,9 @@ struct scene_structure {
 	cgp::scene_environment_basic_camera_spherical_coords environment; // Standard environment controler
 	cgp::inputs_interaction_parameters inputs; // Storage for inputs status (mouse, keyboard, window dimension)
 
-	cgp::timer_basic timer;
+	keyframe_structure keyframe;
 	gui_parameters gui;                       // Standard GUI element storage
-	
+	cgp::timer_interval time;
 
 	cgp::hierarchy_mesh_drawable hierarchy;
 	cgp::mesh rectangle_mesh1;
@@ -48,7 +49,7 @@ struct scene_structure {
 	void initialize();  // Standard initialization to be called before the animation loop
 	void display();     // The frame display to be called within the animation loop
 	void display_gui(); // The display of the GUI, also called within the animation loop
-
+	void mouse_move();
 
 };
 

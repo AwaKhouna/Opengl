@@ -56,7 +56,7 @@ mesh create_terrain_mesh(int N, float terrain_length, perlin_noise_parameters & 
             terrain.position[kv+N*ku] = {x,y,z};
             //terrain.color[kv+N*ku] = 0.2f*vec3(0,0.5f,0)+0.8f*noise*vec3(1,1,1);
 
-            vec2 uv = {u*20,v*20};
+            vec2 uv = {u*10,v*10};
             terrain.uv[kv+N*ku] = uv;
         }
     }
@@ -99,11 +99,7 @@ void update_terrain(mesh& terrain, mesh_drawable& terrain_visual) // ,perlin_noi
                 if(ku>2*N/3)
                     terrain.position[idx].z -= 10.0f;
             }
-			terrain.position[idx].z += 10.0f; //( (float) 3.0f*(N/3 - (ku - 2*N/3))/N )*terrain.position[idx-N-1].z;
-            // }
-
-			// // use also the noise as color value
-			// terrain.color[idx] = 0.3f*vec3(0,0.5f,0)+0.7f*noise*vec3(1,1,1);
+			terrain.position[idx].z += 10.0f; 
 		}
 	}
 
@@ -123,7 +119,7 @@ std::vector<cgp::vec3> generate_positions_on_terrain(int N, float terrain_length
         float x =  rand_interval(-terrain_length,terrain_length);
         float y =  rand_interval(-terrain_length, -5.0f);
         vec2 xy = {x,y};
-        while (! separated(xy ,pos) && x + terrain_length/4 + 5.0f < 0.1f && x + terrain_length/4 + 5.0f > - 0.1f)
+        while (! separated(xy ,pos) || (x + terrain_length/2  < 3.0f && x + terrain_length/2 > - 3.0f))
         {
             x =  rand_interval(-terrain_length,terrain_length);
             y =  rand_interval(-terrain_length, -5.0f);
@@ -138,7 +134,7 @@ std::vector<cgp::vec3> generate_positions_on_terrain(int N, float terrain_length
         float x =  rand_interval(-terrain_length,terrain_length);
         float y =  rand_interval( 2.0f ,terrain_length);
         vec2 xy = {x,y};
-        while (! separated(xy ,pos) && x + terrain_length/4 + 5.0f < 0.1f && x + terrain_length/4 + 5.0f > - 0.1f)
+        while (! separated(xy ,pos) || (x + terrain_length/2 < 1.0f && x + terrain_length/2 > - 1.0f))
         {
             x =  rand_interval(-terrain_length,terrain_length);
             y =  rand_interval(-terrain_length, -5.0f);
@@ -161,7 +157,7 @@ double norm(vec2 a){
 }
 bool separated(vec2 a, std::vector<cgp::vec3> pos){
     for(int i = 0; i < pos.size(); i++){
-            if((pos[i][0]-a[0])*(pos[i][0]-a[0]) < 0.01 && (pos[i][1] - a[1])*(pos[i][1] - a[1]) < 0.01)
+            if((pos[i][0]-a[0])*(pos[i][0]-a[0]) < 3.0f && (pos[i][1] - a[1])*(pos[i][1] - a[1]) < 3.0f)
                 return false;
         }
         return true;

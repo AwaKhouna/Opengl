@@ -2,6 +2,7 @@
 
 #include "terrain.hpp"
 #include "lac.hpp"
+#include "interpolation.hpp"
 
 using namespace cgp;
 
@@ -16,16 +17,16 @@ void scene_structure::initialize()
 	environment.camera.axis = camera_spherical_coordinates_axis::z;
 	environment.camera.look_at({ 15.0f,6.0f,6.0f }, { 0,0,0 });
 
-	int N_terrain_samples = 500;
+	int N_terrain_samples = 1000;
 	float terrain_length = 60;
 	terrain_mesh = create_terrain_mesh(N_terrain_samples, terrain_length, parameters);
 	terrain.initialize(terrain_mesh, "terrain");
 	update_terrain(terrain_mesh, terrain);
 
-	lac_mesh = create_lac_mesh(N_terrain_samples/20, terrain_length);
+	lac_mesh = create_lac_mesh(N_terrain_samples/5, terrain_length);
 	lac.initialize(lac_mesh, "lac");
 	update_lac(lac_mesh, lac, parameters);
-	// lac.shader = opengl_load_shader("shaders/deformation/vert.glsl", "shaders/deformation/frag.glsl");                 
+	// lac.shader = opengl_load_shader("shaders/transparency/vert.glsl","shaders/transparency/frag.glsl");              
 
 	rectangle_mesh1 = cgp::mesh_primitive_quadrangle({-terrain_length/4 + 0.1f,-terrain_length/2,0},{-terrain_length/4,-terrain_length/2,10.0f},{-terrain_length/4,0,10.0f},{-terrain_length/4 + 0.1f,0,0});
 	rectangle_mesh2 = cgp::mesh_primitive_quadrangle({-terrain_length/4 + 0.1f,6.0f,0},{-terrain_length/4,6.0f,10.0f},{-terrain_length/4,terrain_length/2,10.0f},{-terrain_length/4 + 0.1f,terrain_length/2,0});
@@ -122,6 +123,27 @@ void scene_structure::initialize()
 	hierarchy.add(piedG, "Genou G", { 0.1,-0.2,0 }); 
 	hierarchy.add(piedD, "Genou D", { -0.1,-0.2,0 }); 
 
+
+
+
+	// Interpolation 
+
+	buffer<vec3> key_positions = 
+	{ {-20,20,2}, {-20,20,1}, {1,1,2}, {10,-10,2}, {-10,-10,0}, {2,2,2}, {15,10,2}, {15,-10,2}, {25,-10,2}, {5,10,2}, {-20,20,2}, {-20,20,2} };
+
+	// Key times (time at which the position must pass in the corresponding position)
+	buffer<float> key_times = 
+	{ 0.0f, 1.0f, 4.0f, 8.0f, 12.0f, 16.5f, 20.75f, 24.5f, 29.0f, 36.0f, 47.0f, 47.0f };
+
+	// Initialize the helping structure to display/interact with these positions
+	keyframe.initialize(key_positions, key_times);
+
+
+	int N = key_times.size();
+	time.t_min = key_times[1];
+	time.t_max = key_times[N - 2];
+	time.t = time.t_min;
+
 }
 
 
@@ -132,9 +154,9 @@ void scene_structure::display()
 {
 	// Basic elements of the scene
 	for(int i = 0; i < tree_position.size(); i++){
-		trunk.transform.rotation = rotation_transform::from_axis_angle({ 1,0,0 }, 1.5f);// pour transformer au cours du temps ajouter timer.t ...
-		branches.transform.rotation = rotation_transform::from_axis_angle({ 1,0,0 }, 1.5f);// pour transformer au cours du temps ajouter timer.t ...
-		foliage.transform.rotation = rotation_transform::from_axis_angle({ 1,0,0 }, 1.5f);// pour transformer au cours du temps ajouter timer.t ...
+		trunk.transform.rotation = rotation_transform::from_axis_angle({ 1,0,0 }, 1.5f);// pour transformer au cours du temps ajouter time.t ...
+		branches.transform.rotation = rotation_transform::from_axis_angle({ 1,0,0 }, 1.5f);// pour transformer au cours du temps ajouter time.t ...
+		foliage.transform.rotation = rotation_transform::from_axis_angle({ 1,0,0 }, 1.5f);// pour transformer au cours du temps ajouter time.t ...
 		trunk.transform.translation = tree_position[i];
 		branches.transform.translation = tree_position[i];
 		foliage.transform.translation = tree_position[i];
@@ -157,35 +179,58 @@ void scene_structure::display()
 	if (gui.display_wireframe){
 		draw_wireframe(terrain, environment);
 		draw_wireframe(lac, environment);
+		draw_wireframe(hierarchy, environment);
 	}
-	timer.update();
-	float t2 = timer.t;
-	// // environment1.update(lac,lac_mesh, t); à voir 
+	time.update();
+	float t2 = time.t; 
 	update_lac_time(lac_mesh, lac,t2);
+	dynamic_update(lac_mesh,lac , t2);
 	lac.clear();
 	lac.initialize(lac_mesh, "lac");
 	lac.texture = opengl_load_texture_image("assets/eau.jpg",
 	GL_REPEAT,
 	GL_REPEAT);
 	draw(lac, environment);
-	hierarchy["Base"].transform.rotation = rotation_transform::from_matrix(mat3{ (float) cos(0.2f*timer.t),0,sin(0.2f*timer.t), sin(0.2f*timer.t),0,-cos(0.2f*timer.t), 0,1.0f,0});
-	hierarchy["Head"].transform.rotation = rotation_transform::from_axis_angle({ 1,0,0 }, -1.07f + 0.2*std::cos(timer.t));
+	hierarchy["Base"].transform.rotation = rotation_transform::from_matrix(mat3{ (float) cos(0.2f*time.t),0,sin(0.2f*time.t), sin(0.2f*time.t),0,-cos(0.2f*time.t), 0,1.0f,0});
+	hierarchy["Head"].transform.rotation = rotation_transform::from_axis_angle({ 1,0,0 }, -1.07f + 0.2*std::cos(time.t));
 	hierarchy["Aile G"].transform.rotation = rotation_transform::from_axis_angle({ 1,0,0 }, 1.57f);
-	hierarchy["Aile G"].transform.rotation = rotation_transform::from_axis_angle({ 0,1,0 }, 0.6*std::cos(4*timer.t));
+	hierarchy["Aile G"].transform.rotation = rotation_transform::from_axis_angle({ 0,1,0 }, 0.6*std::cos(4*time.t));
 	hierarchy["Aile D"].transform.rotation = rotation_transform::from_axis_angle({ 1,0,0 }, 1.57f);
-	hierarchy["Aile D"].transform.rotation = rotation_transform::from_axis_angle({ 0,1,0 }, 3.14 - 0.6*std::cos(4*timer.t));
+	hierarchy["Aile D"].transform.rotation = rotation_transform::from_axis_angle({ 0,1,0 }, 3.14 - 0.6*std::cos(4*time.t));
 	hierarchy["Nose"].transform.rotation = rotation_transform::from_axis_angle({ 1,0,0 }, -2);
-	hierarchy["Genou G"].transform.rotation = rotation_transform::from_axis_angle({ 1,0,0 }, -0.2*std::cos(4*timer.t));
-	hierarchy["Genou D"].transform.rotation = rotation_transform::from_axis_angle({ 1,0,0 }, 0.2*std::cos(4*timer.t));
+	hierarchy["Genou G"].transform.rotation = rotation_transform::from_axis_angle({ 1,0,0 }, -0.2*std::cos(4*time.t));
+	hierarchy["Genou D"].transform.rotation = rotation_transform::from_axis_angle({ 1,0,0 }, 0.2*std::cos(4*time.t));
 
-	//hierarchy["Base"].transform.rotation = rotation_transform::from_axis_angle({ 0,1,0 }, cos(0.2*timer.t));
+	//hierarchy["Base"].transform.rotation = rotation_transform::from_axis_angle({ 0,1,0 }, cos(0.2*time.t));
 
 	// This function must be called before the drawing in order to propagate the deformations through the hierarchy
-	hierarchy.update_local_to_global_coordinates();
-	hierarchy["Base"].transform.translation = {3*cos(0.2*timer.t),3*sin(0.2*timer.t),1.0f};
 	// Draw the hierarchy as a single mesh
-	draw(hierarchy, environment);
 
+	// if (gui.display_frame)
+	// 	draw(global_frame, environment);
+
+	// Update the current time
+	time.update();
+	float t = time.t;
+
+	// clear trajectory when the time restart
+	// if (t < time.t_min + 0.1f)
+	// 	keyframe.trajectory.clear();
+
+	// Display the key positions and lines b/w positions
+	keyframe.display_key_positions(environment);
+
+
+	// Compute the interpolated position
+	//  This is this function that you need to complete
+	vec3 p = interpolation(t, keyframe.key_positions, keyframe.key_times);
+
+	// Display the interpolated position (and its trajectory)
+	// keyframe.display_current_position(p, environment);
+	hierarchy["Base"].transform.translation = p;
+
+	hierarchy.update_local_to_global_coordinates();
+	draw(hierarchy, environment);
 
 }
 
@@ -197,9 +242,19 @@ void scene_structure::display_gui()
 {
 	ImGui::Checkbox("Frame", &gui.display_frame);
 	ImGui::Checkbox("Wireframe", &gui.display_wireframe);
+	
+	ImGui::SliderFloat("Time", &time.t, time.t_min, time.t_max);
+	ImGui::SliderFloat("Time scale", &time.scale, 0.0f, 2.0f);
 
-
+	// Display the GUI associated to the key position
+	keyframe.display_gui();
 
 }
+void scene_structure::mouse_move()
+{
+	// Handle the picking (displacement of the position using mouse drag)
+	keyframe.update_picking(inputs, environment);
+}
+
 
 

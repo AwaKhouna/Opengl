@@ -28,31 +28,44 @@ mesh create_lac_mesh(int N, float lac_length)
 
             // Compute the surface height function at the given sampled coordinate
             float z = -1.0f; // voir terrain.php pour modifier lac_height
-            if( x < -lac_length/4 - 0.5f)
+            if( x < -lac_length/4 - 0.6f)
                 z += 10.0f;
+
             // Store vertex coordinates
             lac.position[kv+N*ku] = {x,y,z};
             
             vec2 uv = {u*10,v};
             lac.uv[kv+N*ku] = uv;
+
+            // Connectivity
+
+            if(ku < N-1  && kv < N - 1){
+                unsigned int idx = kv + N*ku;
+                uint3 triangle_1 = {idx, idx+1+N, idx+1};
+                uint3 triangle_2 = {idx, idx+N, idx+1+N};
+
+                lac.connectivity.push_back(triangle_1);
+                lac.connectivity.push_back(triangle_2);
+
+            }
         }
     }
 
     // Generate triangle organization
     //  Parametric surface with uniform grid sampling: generate 2 triangles for each grid cell
-    for(int ku=0; ku<N-1; ++ku)
-    {
-        for(int kv=0; kv<N-1; ++kv)
-        {
-            unsigned int idx = kv + N*ku; // current vertex offset
+    // for(int ku=0; ku<N-1; ++ku)
+    // {
+    //     for(int kv=0; kv<N-1; ++kv)
+    //     {
+    //         unsigned int idx = kv + N*ku; // current vertex offset
 
-            uint3 triangle_1 = {idx, idx+1+N, idx+1};
-            uint3 triangle_2 = {idx, idx+N, idx+1+N};
+    //         uint3 triangle_1 = {idx, idx+1+N, idx+1};
+    //         uint3 triangle_2 = {idx, idx+N, idx+1+N};
 
-            lac.connectivity.push_back(triangle_1);
-            lac.connectivity.push_back(triangle_2);
-        }
-    }
+    //         lac.connectivity.push_back(triangle_1);
+    //         lac.connectivity.push_back(triangle_2);
+    //     }
+    // }
 
     // need to call this function to fill the other buffer with default values (normal, color, etc)
 	lac.fill_empty_field(); 
@@ -115,11 +128,11 @@ void update_lac_time(mesh& lac, mesh_drawable& lac_visual,float t)
             // use the noise as height value
 			lac.position[idx].z += 0.02*std::cos(4*t);//noise;
             float H=100.0f;
-            float nx= - std::abs(std::sin(0.01*t)*std::cos(0.1*t)); // std::cos(4*t)/(std::sqrt(2));
-            float ny=0;
-            float nz=std::abs(std::cos(0.1*t));
-            u=lac.position[idx].x+(H-lac.position[idx].z)*(nx/nz);
-            v=lac.position[idx].y+(H-lac.position[idx].z)*(ny/nz);
+            float nx=  - std::abs(sin(0.01f*t)*cos(0.1f*t)); // std::cos(4*t)/(std::sqrt(2));
+            float ny= 0;
+            float nz= std::abs(cos(0.1f*t));//std::sqrt(1 - std::exp(-t/50.0f));
+            u=lac.position[idx].x+(H-lac.position[idx].y)*(nx/nz);
+            v=lac.position[idx].y+(H-lac.position[idx].x)*(ny/nz);
 
 
             vec2 uv = {u,v};
@@ -130,23 +143,23 @@ void update_lac_time(mesh& lac, mesh_drawable& lac_visual,float t)
 		}
         
 	}
-    for(int ku=0; ku<N-1; ++ku)
-    {
-        for(int kv=0; kv<N-1; ++kv)
-        {
-            unsigned int idx = kv + N*ku; // current vertex offset
+    // for(int ku=0; ku<N-1; ++ku)
+    // {
+    //     for(int kv=0; kv<N-1; ++kv)
+    //     {
+    //         unsigned int idx = kv + N*ku; // current vertex offset
 
-            uint3 triangle_1 = {idx, idx+1+N, idx+1};
-            uint3 triangle_2 = {idx, idx+N, idx+1+N};
+    //         uint3 triangle_1 = {idx, idx+1+N, idx+1};
+    //         uint3 triangle_2 = {idx, idx+N, idx+1+N};
 
-            lac.connectivity.push_back(triangle_1);
-            lac.connectivity.push_back(triangle_2);
-        }
-    }
+    //         lac.connectivity.push_back(triangle_1);
+    //         lac.connectivity.push_back(triangle_2);
+    //     }
+    // }
 
     // need to call this function to fill the other buffer with default values (normal, color, etc)
 	
-   lac.fill_empty_field();
+   // lac.fill_empty_field();
 
 
 // Update the normal of the mesh structure
@@ -159,6 +172,32 @@ void update_lac_time(mesh& lac, mesh_drawable& lac_visual,float t)
 
      
 
+}
+
+void dynamic_update(mesh& mesh_shape, mesh_drawable& drawable, float t)
+{
+	// 1- Update the mesh as your wish
+	int N = mesh_shape.position.size();
+	for (int k = 0; k < N; ++k) {
+		// Changing the positions
+		vec3& p = mesh_shape.position[k];
+		p.z += 0.003f*std::cos( 6 * 3.14f*p.x - t);
+
+		// The colors can be changed too
+		// vec3& c = mesh_shape.color[k]; 
+		// c +=  std::abs(std::cos(t+p.x*30*3.14f));
+	}
+
+	// 2- Don't forget to update the shape normals after modifying the position
+	mesh_shape.compute_normal();
+
+	// 3- Update the buffers of the corresponding mesh_drawable
+	drawable.update_position(mesh_shape.position);
+	drawable.update_color(mesh_shape.color);
+	drawable.update_normal(mesh_shape.normal);
+
+	// Note: Using mesh_drawable.update() calls glBufferSubData
+	//  This is more efficient that re-allocating a new mesh_drawable
 }
 
 

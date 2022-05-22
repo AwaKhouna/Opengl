@@ -87,6 +87,8 @@ void mouse_move_callback(GLFWwindow* /*window*/, double xpos, double ypos)
 	// Apply camera rotation only if shift is not pressed
 	if (!scene.inputs.keyboard.shift)
 		camera_standard_behavior_rotation(scene.environment.camera, scene.inputs);
+		
+	scene.mouse_move();
 }
 
 // This function is called everytime a mouse button is clicked/released
