@@ -10,6 +10,8 @@ using namespace cgp;
 
 void scene_structure::initialize()
 {
+	skybox.initialize("assets/skybox/"); 
+
 	// Basic set-up
 	// ***************************************** //
 
@@ -50,13 +52,8 @@ void scene_structure::initialize()
 	foliage.initialize(mesh_load_file_obj("assets/foliage.obj"), "Foliage");
 	foliage.texture = opengl_load_texture_image("assets/pine.png");
 	foliage.shading.phong = { 0.4f, 0.6f, 0, 0.5 }; 
-	//foliage.shading.color/=2; // changer la couleur du foliage 
 	//foliage.shader = opengl_load_shader("shaders/transparency/vert.glsl","shaders/transparency/frag.glsl");
-
-	
-	terrain.texture = 2*opengl_load_texture_image("assets/texture_grass.jpg",
-		GL_REPEAT,
-		GL_REPEAT);
+ 
 
 	lac.texture = opengl_load_texture_image("assets/eau.jpg",
 		GL_REPEAT,
@@ -124,8 +121,6 @@ void scene_structure::initialize()
 	hierarchy.add(piedD, "Genou D", { -0.1,-0.2,0 }); 
 
 
-
-
 	// Interpolation 
 
 	buffer<vec3> key_positions = 
@@ -138,12 +133,10 @@ void scene_structure::initialize()
 	// Initialize the helping structure to display/interact with these positions
 	keyframe.initialize(key_positions, key_times);
 
-
 	int N = key_times.size();
 	time.t_min = key_times[1];
 	time.t_max = key_times[N - 2];
 	time.t = time.t_min;
-
 }
 
 
@@ -152,6 +145,7 @@ void scene_structure::initialize()
 
 void scene_structure::display()
 {
+	draw(skybox, environment);
 	// Basic elements of the scene
 	for(int i = 0; i < tree_position.size(); i++){
 		trunk.transform.rotation = rotation_transform::from_axis_angle({ 1,0,0 }, 1.5f);// pour transformer au cours du temps ajouter time.t ...
@@ -165,7 +159,6 @@ void scene_structure::display()
 		draw(foliage, environment);
 	}
 	
-	
 	environment.light = environment.camera.position();
 	if (gui.display_frame)
 		draw(global_frame, environment);
@@ -176,12 +169,15 @@ void scene_structure::display()
 
 
 	draw(terrain, environment);
+
+
 	if (gui.display_wireframe){
 		draw_wireframe(terrain, environment);
 		draw_wireframe(lac, environment);
 		draw_wireframe(hierarchy, environment);
 	}
 	time.update();
+
 	float t2 = time.t; 
 	update_lac_time(lac_mesh, lac,t2);
 	dynamic_update(lac_mesh,lac , t2);
@@ -191,7 +187,7 @@ void scene_structure::display()
 	GL_REPEAT,
 	GL_REPEAT);
 	draw(lac, environment);
-	hierarchy["Base"].transform.rotation = rotation_transform::from_matrix(mat3{ (float) cos(0.2f*time.t),0,sin(0.2f*time.t), sin(0.2f*time.t),0,-cos(0.2f*time.t), 0,1.0f,0});
+	hierarchy["Base"].transform.rotation = rotation_transform::from_axis_angle({ 1,0,0 }, 1.57f);
 	hierarchy["Head"].transform.rotation = rotation_transform::from_axis_angle({ 1,0,0 }, -1.07f + 0.2*std::cos(time.t));
 	hierarchy["Aile G"].transform.rotation = rotation_transform::from_axis_angle({ 1,0,0 }, 1.57f);
 	hierarchy["Aile G"].transform.rotation = rotation_transform::from_axis_angle({ 0,1,0 }, 0.6*std::cos(4*time.t));
@@ -227,8 +223,18 @@ void scene_structure::display()
 
 	// Display the interpolated position (and its trajectory)
 	// keyframe.display_current_position(p, environment);
+	// TO DO
+	int k=0;
+    while( keyframe.key_times[k+1]<t )
+        ++k;
+	float theta = std::atan((keyframe.key_positions[k+1].y-keyframe.key_positions[k].y)/(keyframe.key_positions[k+1].x-keyframe.key_positions[k].x));
+	hierarchy["Base"].transform.rotation = rotation_transform::from_matrix({cos(theta + 1.57f), 0, sin(theta + 1.57f), sin(theta + 1.57f), 0, -cos(theta + 1.57f), 0, 1, 0}); // TO DO 
+	
 	hierarchy["Base"].transform.translation = p;
+	hierarchy.update_local_to_global_coordinates();
+	draw(hierarchy, environment);
 
+	hierarchy["Base"].transform.translation = p - {3.0f,0,0};
 	hierarchy.update_local_to_global_coordinates();
 	draw(hierarchy, environment);
 

@@ -26,6 +26,8 @@ struct scene_structure {
 	keyframe_structure keyframe;
 	gui_parameters gui;                       // Standard GUI element storage
 	cgp::timer_interval time;
+	
+	cgp::skybox_drawable skybox;
 
 	cgp::hierarchy_mesh_drawable hierarchy;
 	cgp::mesh rectangle_mesh1;
