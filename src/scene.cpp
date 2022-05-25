@@ -10,7 +10,7 @@ using namespace cgp;
 
 void scene_structure::initialize()
 {
-	skybox.initialize("assets/skybox/"); 
+	// skybox.initialize("assets/skybox/"); 
 
 	// Basic set-up
 	// ***************************************** //
@@ -20,7 +20,7 @@ void scene_structure::initialize()
 	environment.camera.look_at({ 15.0f,6.0f,6.0f }, { 0,0,0 });
 
 	int N_terrain_samples = 1000;
-	float terrain_length = 60;
+	float terrain_length = 100;
 	terrain_mesh = create_terrain_mesh(N_terrain_samples, terrain_length, parameters);
 	terrain.initialize(terrain_mesh, "terrain");
 	update_terrain(terrain_mesh, terrain);
@@ -123,19 +123,51 @@ void scene_structure::initialize()
 
 	// Interpolation 
 
-	buffer<vec3> key_positions = 
-	{ {-20,20,2}, {-20,20,1}, {1,1,2}, {10,-10,2}, {-10,-10,0}, {2,2,2}, {15,10,2}, {15,-10,2}, {25,-10,2}, {5,10,2}, {-20,20,2}, {-20,20,2} };
+	buffer<vec3> key_positions;
+	//{ {-20,20,1}, {-20,20,1}, {1,1,2}, {10,-10,2}, {-10,-10,0}, {2,2,2}, {15,10,2}, {15,-10,2}, {25,-10,2}, {5,10,2}, {-20,20,2}, {-20,20,2} };
+	
+	buffer<float> key_times; 
+	buffer<vec3> key_positions1;
+	buffer<float> key_times1;
+	float x0 = 0; 
+	float thet = 1.0f;
+	float pas = 3.14f/thet;
+	float imax = (terrain_length/2 - x0)/pas;
+	key_positions.push_back({15,15, 8});
+	key_positions1.push_back({0,0, -0.6f});
+	key_times.push_back(0);
+	key_times1.push_back(0);
+	for(int i = 0; i < imax + 1; i++){
+		float x = 15 - 17*i/imax;
+		float y = 5*x/16 + 165/16.0f;
+		key_positions.push_back({x, y, evaluate_terrain_height(x,y) + 0.9f});
+		key_positions1.push_back({x0 + i*pas, - 2.0f*sin(3.14f*i/imax), 0.1*cos(thet*(x0 + i*pas)) - 0.6f});
+		key_times1.push_back(i*pas);
+		key_times.push_back(i*pas);
+	}
+	int i_fin = (int) imax;
+	key_positions1.push_back({0,0,-0.6});
+	key_positions1.push_back({0,0,-0.6});
+	key_positions.push_back({15 - 17*i_fin/imax, 5*(15 - 17*i_fin/imax)/16 + 165/16.0f, evaluate_terrain_height(15 - 17*i_fin/imax, 5*(15 - 17*i_fin/imax)/16 + 165/16.0f) + 0.9f});
+	key_times.push_back(i_fin*pas + 20);
+	key_times1.push_back(i_fin*pas + 20);
+	key_times1.push_back(i_fin*pas + 20);
+
+	// int i_fin = (int) imax;
+	// key_positions1.push_back({x0 + i_fin*pas, - 2.0f*sin(3.14f*i_fin/imax), cos(thet*(x0 + i_fin*pas))});
+	// key_times1.push_back(i_fin*pas);
+	
 
 	// Key times (time at which the position must pass in the corresponding position)
-	buffer<float> key_times = 
-	{ 0.0f, 1.0f, 4.0f, 8.0f, 12.0f, 16.5f, 20.75f, 24.5f, 29.0f, 36.0f, 47.0f, 47.0f };
+	// { 0.0f, 1.0f, 4.0f, 8.0f, 12.0f, 16.5f, 20.75f, 24.5f, 29.0f, 36.0f, 47.0f, 47.0f };
 
 	// Initialize the helping structure to display/interact with these positions
 	keyframe.initialize(key_positions, key_times);
+	keyframe1.initialize(key_positions1, key_times1);
 
-	int N = key_times.size();
-	time.t_min = key_times[1];
-	time.t_max = key_times[N - 2];
+	int N = key_times1.size();
+	time.t_min = key_times1[1];
+	time.t_max = key_times1[N - 2];
 	time.t = time.t_min;
 }
 
@@ -145,7 +177,7 @@ void scene_structure::initialize()
 
 void scene_structure::display()
 {
-	draw(skybox, environment);
+	// draw(skybox, environment);
 	// Basic elements of the scene
 	for(int i = 0; i < tree_position.size(); i++){
 		trunk.transform.rotation = rotation_transform::from_axis_angle({ 1,0,0 }, 1.5f);// pour transformer au cours du temps ajouter time.t ...
@@ -206,7 +238,6 @@ void scene_structure::display()
 	// 	draw(global_frame, environment);
 
 	// Update the current time
-	time.update();
 	float t = time.t;
 
 	// clear trajectory when the time restart
@@ -214,12 +245,14 @@ void scene_structure::display()
 	// 	keyframe.trajectory.clear();
 
 	// Display the key positions and lines b/w positions
-	keyframe.display_key_positions(environment);
+	// keyframe.display_key_positions(environment);
+	// keyframe1.display_key_positions(environment);
 
 
 	// Compute the interpolated position
 	//  This is this function that you need to complete
 	vec3 p = interpolation(t, keyframe.key_positions, keyframe.key_times);
+	vec3 p1 = interpolation(t, keyframe1.key_positions, keyframe1.key_times);
 
 	// Display the interpolated position (and its trajectory)
 	// keyframe.display_current_position(p, environment);
@@ -227,16 +260,33 @@ void scene_structure::display()
 	int k=0;
     while( keyframe.key_times[k+1]<t )
         ++k;
-	float theta = std::atan((keyframe.key_positions[k+1].y-keyframe.key_positions[k].y)/(keyframe.key_positions[k+1].x-keyframe.key_positions[k].x));
-	hierarchy["Base"].transform.rotation = rotation_transform::from_matrix({cos(theta + 1.57f), 0, sin(theta + 1.57f), sin(theta + 1.57f), 0, -cos(theta + 1.57f), 0, 1, 0}); // TO DO 
+	float theta = -1.57f;
+	float theta1 = std::atan((keyframe1.key_positions[k+1].y-keyframe1.key_positions[k].y)/(keyframe1.key_positions[k+1].z-keyframe1.key_positions[k].z));
+	hierarchy["Base"].transform.rotation = rotation_transform::from_matrix({cos(theta), 0, -sin(theta), -sin(theta), 0, -cos(theta), 0, 1, 0}); // TO DO 
 	
 	hierarchy["Base"].transform.translation = p;
 	hierarchy.update_local_to_global_coordinates();
 	draw(hierarchy, environment);
 
-	hierarchy["Base"].transform.translation = p - {3.0f,0,0};
+
+	hierarchy["Base"].transform.rotation = rotation_transform::from_matrix({0, cos(theta1 ), sin(theta1 ),  -1, 0, 0, 0, -sin(theta1 ), cos(theta1)}); // TO DO 
+	hierarchy["Base"].transform.translation = p1;
 	hierarchy.update_local_to_global_coordinates();
 	draw(hierarchy, environment);
+
+	// pour arreter le mouvement des pieds
+	hierarchy["Genou G"].transform.rotation = rotation_transform::from_axis_angle({ 1,0,0 }, 0);
+	hierarchy["Genou D"].transform.rotation = rotation_transform::from_axis_angle({ 1,0,0 }, 0);
+
+	for(int i = 1; i < 10; i ++){
+		float O = -2*3.14*i/10 - 1.58f;
+		hierarchy["Base"].transform.rotation = rotation_transform::from_matrix({cos(O), 0, -sin(O), -sin(O), 0 ,-cos(O), 0, 1, 0}); // TO DO 
+		hierarchy["Base"].transform.translation = {3*cos(2*3.14*i/10) - 4.0f,10 + 3*sin(2*3.14*i/10),0.7f};
+		hierarchy.update_local_to_global_coordinates();
+		draw(hierarchy, environment);
+	}
+
+	
 
 }
 
@@ -253,13 +303,15 @@ void scene_structure::display_gui()
 	ImGui::SliderFloat("Time scale", &time.scale, 0.0f, 2.0f);
 
 	// Display the GUI associated to the key position
-	keyframe.display_gui();
+	//keyframe.display_gui();
+	// keyframe1.display_gui();
 
 }
 void scene_structure::mouse_move()
 {
 	// Handle the picking (displacement of the position using mouse drag)
 	keyframe.update_picking(inputs, environment);
+	keyframe1.update_picking(inputs, environment);
 }
 
 

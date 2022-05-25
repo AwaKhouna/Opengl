@@ -126,7 +126,7 @@ void update_lac_time(mesh& lac, mesh_drawable& lac_visual,float t)
 
 			int const idx = ku*N+kv;
             // use the noise as height value
-			lac.position[idx].z += 0.02*std::cos(4*t);//noise;
+			lac.position[idx].z += 0.005*std::cos(t);//noise;
             float H=100.0f;
             float nx=  - std::abs(sin(0.01f*t)*cos(0.1f*t)); // std::cos(4*t)/(std::sqrt(2));
             float ny= 0;
@@ -181,7 +181,7 @@ void dynamic_update(mesh& mesh_shape, mesh_drawable& drawable, float t)
 	for (int k = 0; k < N; ++k) {
 		// Changing the positions
 		vec3& p = mesh_shape.position[k];
-		p.z += 0.003f*std::cos( 6 * 3.14f*p.x - t);
+		p.z += 0.002f*std::cos( 3.14f*p.x/3.0f - 3*t);
 
 		// The colors can be changed too
 		// vec3& c = mesh_shape.color[k]; 
