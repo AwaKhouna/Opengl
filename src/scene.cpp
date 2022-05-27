@@ -6,7 +6,26 @@
 
 using namespace cgp;
 
+void scene_structure::update_camera()
+{
+	inputs_keyboard_parameters const& keyboard = inputs.keyboard;
+	camera_head& camera = environment.camera;
 
+	float const dt = time.update();
+	vec3 const forward_displacement = gui.speed * 0.1f * dt * camera.front();
+	camera.position_camera += forward_displacement;
+
+	float const pitch = 0.5f; 
+	float const roll  = 0.7f;
+	if (keyboard.up)
+		camera.manipulator_rotate_roll_pitch_yaw(0, pitch * dt, 0); 
+	if (keyboard.down)
+		camera.manipulator_rotate_roll_pitch_yaw(0,  -pitch * dt, 0); 
+	if (keyboard.right)
+		camera.manipulator_rotate_roll_pitch_yaw( roll * dt, 0, 0);
+	if (keyboard.left)
+		camera.manipulator_rotate_roll_pitch_yaw(-roll * dt, 0, 0);
+}
 
 void scene_structure::initialize()
 {
@@ -16,8 +35,11 @@ void scene_structure::initialize()
 	// ***************************************** //
 
 	global_frame.initialize(mesh_primitive_frame(), "Frame");
-	environment.camera.axis = camera_spherical_coordinates_axis::z;
-	environment.camera.look_at({ 15.0f,6.0f,6.0f }, { 0,0,0 });
+	// environment.camera.axis = camera_spherical_coordinates_axis::z;
+	// environment.camera.look_at({ 15.0f,6.0f,6.0f }, { 0,0,0 });
+
+	environment.camera.position_camera = { 0.0f, -10.0f, 18.0f };
+	environment.camera.manipulator_rotate_roll_pitch_yaw(0, 0, 0);
 
 	int N_terrain_samples = 1000;
 	float terrain_length = 100;
@@ -134,19 +156,19 @@ void scene_structure::initialize()
 	float pas = 3.14f/thet;
 	float imax = (terrain_length/2 - x0)/pas;
 	key_positions.push_back({15,15, 8});
-	key_positions1.push_back({0,0, -0.6f});
+	key_positions1.push_back({0,0, -1.2f});
 	key_times.push_back(0);
 	key_times1.push_back(0);
 	for(int i = 0; i < imax + 1; i++){
 		float x = 15 - 17*i/imax;
 		float y = 5*x/16 + 165/16.0f;
 		key_positions.push_back({x, y, evaluate_terrain_height(x,y) + 0.9f});
-		key_positions1.push_back({x0 + i*pas, - 2.0f*sin(3.14f*i/imax), 0.1*cos(thet*(x0 + i*pas)) - 0.6f});
+		key_positions1.push_back({x0 + i*pas, - 2.0f*sin(3.14f*i/imax), 0.1*cos(thet*(x0 + i*pas)) - 1.2f});
 		key_times1.push_back(i*pas);
 		key_times.push_back(i*pas);
 	}
 	int i_fin = (int) imax;
-	key_positions1.push_back({0,0,-0.6});
+	key_positions1.push_back({0,0,-1.2f});
 	key_positions.push_back({15 - 17*i_fin/imax, 5*(15 - 17*i_fin/imax)/16 + 165/16.0f, evaluate_terrain_height(15 - 17*i_fin/imax, 5*(15 - 17*i_fin/imax)/16 + 165/16.0f) + 0.9f});
 	key_times.push_back(i_fin*pas + 20);
 	key_times1.push_back(i_fin*pas + 20);
@@ -300,17 +322,18 @@ void scene_structure::display_gui()
 	ImGui::SliderFloat("Time", &time.t, time.t_min, time.t_max);
 	ImGui::SliderFloat("Time scale", &time.scale, 0.0f, 2.0f);
 
+	ImGui::SliderFloat("Speed", &gui.speed, 0.2f, 5.0f);
 	// Display the GUI associated to the key position
 	//keyframe.display_gui();
 	// keyframe1.display_gui();
 
 }
-void scene_structure::mouse_move()
-{
-	// Handle the picking (displacement of the position using mouse drag)
-	keyframe.update_picking(inputs, environment);
-	keyframe1.update_picking(inputs, environment);
-}
+// void scene_structure::mouse_move()
+// {
+// 	// Handle the picking (displacement of the position using mouse drag)
+// 	keyframe.update_picking(inputs, environment);
+// 	keyframe1.update_picking(inputs, environment);
+// }
 
 
 

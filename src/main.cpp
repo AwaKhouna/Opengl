@@ -56,6 +56,8 @@ int main(int, char* argv[])
 		// Display the ImGUI interface (button, sliders, etc)
 		scene.display_gui();
 
+
+		scene.update_camera();
 		// Call the display of the scene
 		scene.display();
 		
@@ -84,11 +86,11 @@ void mouse_move_callback(GLFWwindow* /*window*/, double xpos, double ypos)
 {
 	scene.inputs.mouse_position_update( { xpos, ypos } );
 
-	// Apply camera rotation only if shift is not pressed
-	if (!scene.inputs.keyboard.shift)
-		camera_standard_behavior_rotation(scene.environment.camera, scene.inputs);
+	// // Apply camera rotation only if shift is not pressed
+	// if (!scene.inputs.keyboard.shift)
+	// 	camera_standard_behavior_rotation(scene.environment.camera, scene.inputs);
 		
-	scene.mouse_move();
+	// scene.mouse_move();
 }
 
 // This function is called everytime a mouse button is clicked/released

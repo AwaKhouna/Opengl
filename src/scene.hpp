@@ -3,11 +3,13 @@
 #include "cgp/cgp.hpp"
 #include "terrain.hpp"
 #include "key_positions_structure.hpp"
+#include "environment_camera_head/environment_camera_head.hpp"
 
 // The element of the GUI that are not already stored in other structures
 struct gui_parameters {
 	bool display_frame      = false;
 	bool display_wireframe  = false;
+	float speed = 0.0f; 
 };
 
 
@@ -20,7 +22,8 @@ struct scene_structure {
 	// ****************************** //
 
 	cgp::mesh_drawable global_frame;          // The standard global frame
-	cgp::scene_environment_basic_camera_spherical_coords environment; // Standard environment controler
+	//cgp::scene_environment_basic_camera_spherical_coords environment; // Standard environment controler
+	scene_environment_camera_head environment;
 	cgp::inputs_interaction_parameters inputs; // Storage for inputs status (mouse, keyboard, window dimension)
 
 	keyframe_structure keyframe;
@@ -49,6 +52,7 @@ struct scene_structure {
 	// Functions
 	// ****************************** //
 
+	void update_camera();
 	void initialize();  // Standard initialization to be called before the animation loop
 	void display();     // The frame display to be called within the animation loop
 	void display_gui(); // The display of the GUI, also called within the animation loop
