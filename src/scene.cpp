@@ -147,10 +147,8 @@ void scene_structure::initialize()
 	}
 	int i_fin = (int) imax;
 	key_positions1.push_back({0,0,-0.6});
-	key_positions1.push_back({0,0,-0.6});
 	key_positions.push_back({15 - 17*i_fin/imax, 5*(15 - 17*i_fin/imax)/16 + 165/16.0f, evaluate_terrain_height(15 - 17*i_fin/imax, 5*(15 - 17*i_fin/imax)/16 + 165/16.0f) + 0.9f});
 	key_times.push_back(i_fin*pas + 20);
-	key_times1.push_back(i_fin*pas + 20);
 	key_times1.push_back(i_fin*pas + 20);
 
 	// int i_fin = (int) imax;
