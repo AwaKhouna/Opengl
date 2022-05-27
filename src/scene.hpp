@@ -24,10 +24,11 @@ struct scene_structure {
 	cgp::inputs_interaction_parameters inputs; // Storage for inputs status (mouse, keyboard, window dimension)
 
 	keyframe_structure keyframe;
+	keyframe_structure keyframe1;
 	gui_parameters gui;                       // Standard GUI element storage
 	cgp::timer_interval time;
 	
-	cgp::skybox_drawable skybox;
+	// cgp::skybox_drawable skybox;
 
 	cgp::hierarchy_mesh_drawable hierarchy;
 	cgp::mesh rectangle_mesh1;
