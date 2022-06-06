@@ -22,7 +22,6 @@ struct scene_structure {
 	// ****************************** //
 
 	cgp::mesh_drawable global_frame;          // The standard global frame
-	//cgp::scene_environment_basic_camera_spherical_coords environment; // Standard environment controler
 	scene_environment_camera_head environment;
 	cgp::inputs_interaction_parameters inputs; // Storage for inputs status (mouse, keyboard, window dimension)
 
@@ -31,7 +30,7 @@ struct scene_structure {
 	gui_parameters gui;                       // Standard GUI element storage
 	cgp::timer_interval time;
 	
-	// cgp::skybox_drawable skybox;
+	cgp::skybox_drawable skybox;
 
 	cgp::hierarchy_mesh_drawable hierarchy;
 	cgp::mesh rectangle_mesh1;
