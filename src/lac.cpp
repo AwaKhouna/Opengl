@@ -131,7 +131,7 @@ void update_lac_time(mesh& lac, mesh_drawable& lac_visual,float t)
             float nx=  - std::abs(sin(0.01f*t)*cos(0.1f*t)); // std::cos(4*t)/(std::sqrt(2));
             float ny= 0;
             float nz= std::abs(cos(0.1f*t));//std::sqrt(1 - std::exp(-t/50.0f));
-            u=lac.position[idx].x+(H-lac.position[idx].y)*(nx/nz);
+            u=lac.position[idx].x+(H-lac.position[idx].x)*(nx/nz);
             v=lac.position[idx].y+(H-lac.position[idx].x)*(ny/nz);
 
 
