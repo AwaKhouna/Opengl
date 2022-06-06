@@ -15,8 +15,9 @@ void scene_structure::update_camera()
 	vec3 const forward_displacement = gui.speed * 0.1f * dt * camera.front();
 	camera.position_camera += forward_displacement;
 
-	float const pitch = 0.5f; 
-	float const roll  = 0.7f;
+	float pitch = 0.7f; 
+	float roll  = 0.9f;
+	
 	if (keyboard.up)
 		camera.manipulator_rotate_roll_pitch_yaw(0, pitch * dt, 0); 
 	if (keyboard.down)
