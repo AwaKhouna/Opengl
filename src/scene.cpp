@@ -23,13 +23,17 @@ void scene_structure::update_camera()
 	if (keyboard.down)
 		camera.manipulator_rotate_roll_pitch_yaw(0,  -pitch * dt, 0); 
 	if (keyboard.right)
-		camera.manipulator_rotate_roll_pitch_yaw( roll * dt, 0, 0);
+		camera.manipulator_rotate_roll_pitch_yaw( 0, 0, -roll * dt);
 	if (keyboard.left)
+		camera.manipulator_rotate_roll_pitch_yaw(0, 0, roll * dt);
+	if (keyboard.r)
+		camera.manipulator_rotate_roll_pitch_yaw(roll * dt,0,0);
+	if (keyboard.l)
 		camera.manipulator_rotate_roll_pitch_yaw(-roll * dt, 0, 0);
 	if (keyboard.z)
-		gui.speed += 2;
+		gui.speed += 1;
 	if (keyboard.s)
-		gui.speed -= 2;
+		gui.speed -= 1;
 }
 
 void scene_structure::initialize()

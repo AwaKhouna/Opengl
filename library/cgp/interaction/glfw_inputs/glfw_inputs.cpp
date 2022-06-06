@@ -88,6 +88,14 @@ void inputs_keyboard_parameters::update_from_glfw_key(int key, int action)
 		if (action == GLFW_PRESS) s = true;
 		if (action == GLFW_RELEASE) s = false;
 	}
+	if (key == GLFW_KEY_R) {
+		if (action == GLFW_PRESS) r = true;
+		if (action == GLFW_RELEASE) r = false;
+	}
+	if (key == GLFW_KEY_L) {
+		if (action == GLFW_PRESS) l = true;
+		if (action == GLFW_RELEASE) l = false;
+	}
 }
 
 inputs_keyboard_parameters::inputs_keyboard_parameters()
