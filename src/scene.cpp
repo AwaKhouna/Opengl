@@ -29,7 +29,7 @@ void scene_structure::update_camera()
 
 void scene_structure::initialize()
 {
-	// skybox.initialize("assets/skybox/"); 
+	skybox.initialize("assets/skybox/"); 
 
 	// Basic set-up
 	// ***************************************** //
@@ -197,7 +197,7 @@ void scene_structure::initialize()
 
 void scene_structure::display()
 {
-	// draw(skybox, environment);
+	draw(skybox, environment);
 	// Basic elements of the scene
 	for(int i = 0; i < tree_position.size(); i++){
 		trunk.transform.rotation = rotation_transform::from_axis_angle({ 1,0,0 }, 1.5f);// pour transformer au cours du temps ajouter time.t ...
