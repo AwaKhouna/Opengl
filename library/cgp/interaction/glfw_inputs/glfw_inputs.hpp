@@ -36,7 +36,7 @@ struct inputs_keyboard_parameters {
 
 	bool shift;
 	bool ctrl;
-	bool up, down, right, left;
+	bool up, down, right, left, z, s;
 
 	inputs_keyboard_parameters();
 	void update_from_glfw_key(int key, int action);

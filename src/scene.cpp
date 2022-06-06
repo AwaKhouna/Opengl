@@ -15,8 +15,9 @@ void scene_structure::update_camera()
 	vec3 const forward_displacement = gui.speed * 0.1f * dt * camera.front();
 	camera.position_camera += forward_displacement;
 
-	float const pitch = 0.5f; 
-	float const roll  = 0.7f;
+	float pitch = 0.7f; 
+	float roll  = 0.9f;
+	
 	if (keyboard.up)
 		camera.manipulator_rotate_roll_pitch_yaw(0, pitch * dt, 0); 
 	if (keyboard.down)
@@ -25,6 +26,10 @@ void scene_structure::update_camera()
 		camera.manipulator_rotate_roll_pitch_yaw( roll * dt, 0, 0);
 	if (keyboard.left)
 		camera.manipulator_rotate_roll_pitch_yaw(-roll * dt, 0, 0);
+	if (keyboard.z)
+		gui.speed += 2;
+	if (keyboard.s)
+		gui.speed -= 2;
 }
 
 void scene_structure::initialize()
@@ -249,24 +254,13 @@ void scene_structure::display()
 	hierarchy["Genou G"].transform.rotation = rotation_transform::from_axis_angle({ 1,0,0 }, -0.2*std::cos(4*time.t));
 	hierarchy["Genou D"].transform.rotation = rotation_transform::from_axis_angle({ 1,0,0 }, 0.2*std::cos(4*time.t));
 
-	//hierarchy["Base"].transform.rotation = rotation_transform::from_axis_angle({ 0,1,0 }, cos(0.2*time.t));
-
 	// This function must be called before the drawing in order to propagate the deformations through the hierarchy
 	// Draw the hierarchy as a single mesh
 
-	// if (gui.display_frame)
-	// 	draw(global_frame, environment);
+	
 
 	// Update the current time
 	float t = time.t;
-
-	// clear trajectory when the time restart
-	// if (t < time.t_min + 0.1f)
-	// 	keyframe.trajectory.clear();
-
-	// Display the key positions and lines b/w positions
-	// keyframe.display_key_positions(environment);
-	// keyframe1.display_key_positions(environment);
 
 
 	// Compute the interpolated position
@@ -319,10 +313,10 @@ void scene_structure::display_gui()
 	ImGui::Checkbox("Frame", &gui.display_frame);
 	ImGui::Checkbox("Wireframe", &gui.display_wireframe);
 	
-	ImGui::SliderFloat("Time", &time.t, time.t_min, time.t_max);
-	ImGui::SliderFloat("Time scale", &time.scale, 0.0f, 2.0f);
+	// ImGui::SliderFloat("Time", &time.t, time.t_min, time.t_max);
+	// ImGui::SliderFloat("Time scale", &time.scale, 0.0f, 2.0f);
 
-	ImGui::SliderFloat("Speed", &gui.speed, 0.2f, 5.0f);
+	ImGui::SliderFloat("Speed", &gui.speed, 0.0f, 10.0f);
 	// Display the GUI associated to the key position
 	//keyframe.display_gui();
 	// keyframe1.display_gui();
